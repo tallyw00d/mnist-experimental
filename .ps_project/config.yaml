@@ -4,10 +4,10 @@ version: 0
 worker:
   container: "tensorflow/tensorflow:1.13.1-gpu-py3"
   command: "python mnist.py"
-  machine-type: "V100"
+  machine-type: "K80"
   count: 2
 parameter-server:
   container: "tensorflow/tensorflow:1.13.1-gpu-py3"
   command: "python mnist.py"
-  machine-type: "V100"
+  machine-type: "K80"
   count: 1
