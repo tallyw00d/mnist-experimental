@@ -115,7 +115,7 @@ def define_mnist_flags():
     flags_core.set_defaults(data_dir=data_dir,
                             model_dir=model_dir,
                             batch_size=int(os.environ.get('batch_size', 100)),
-                            train_epochs=int(os.environ.get('train_epochs', 1)))
+                            train_epochs=int(os.environ.get('train_epochs', 10)))
 
 
 def model_fn(features, labels, mode, params):
