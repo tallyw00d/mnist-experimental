@@ -43,10 +43,6 @@ The SavedModel will be saved in a timestamped directory under `/tmp/mnist_saved_
 **Getting predictions with SavedModel**
 Use [`saved_model_cli`](https://www.tensorflow.org/guide/saved_model#cli_to_inspect_and_execute_savedmodel) to inspect and execute the SavedModel.
 
-```
-saved_model_cli run --dir /tmp/mnist_saved_model/TIMESTAMP --tag_set serve --signature_def classify --inputs image=examples.npy
-```
-
 `examples.npy` contains the data from `example5.png` and `example3.png` in a numpy array, in that order. The array values are normalized to values between 0 and 1.
 
 The output should look similar to below:
@@ -61,21 +57,3 @@ Result for output key probabilities:
     3.30306928e-11   2.87386645e-02   2.82353517e-02   8.21146413e-18
     2.52568233e-03   4.15460236e-04]]
 ```
-
-## Experimental: Eager Execution
-
-[Eager execution](https://research.googleblog.com/2017/10/eager-execution-imperative-define-by.html)
-(an preview feature in TensorFlow 1.5) is an imperative interface to TensorFlow.
-The exact same model defined in `mnist.py` can be trained without creating a
-TensorFlow graph using:
-
-```
-python mnist_eager.py
-```
-
-## Experimental: TPU Acceleration
-
-`mnist.py` (and `mnist_eager.py`) demonstrate training a neural network to
-classify digits on CPUs and GPUs. `mnist_tpu.py` can be used to train the
-same model using TPUs for hardware acceleration. More information in
-the [tensorflow/tpu](https://github.com/tensorflow/tpu) repository.
