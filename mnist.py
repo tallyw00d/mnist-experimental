@@ -110,7 +110,7 @@ def define_mnist_flags():
     flags_core.define_performance(num_parallel_calls=False)
     flags_core.define_image()
     data_dir = os.path.abspath(os.environ.get('PS_JOBSPACE', os.getcwd()) + '/data')
-    model_dir = os.path.abspath(os.environ.get('PS_JOBSPACE', os.getcwd()) + '/logs')
+    model_dir = os.path.abspath(os.environ.get('PS_JOBSPACE', os.getcwd()) + '/models')
     flags.adopt_module_key_flags(flags_core)
     flags_core.set_defaults(data_dir=data_dir,
                             model_dir=model_dir,
