@@ -231,13 +231,7 @@ def run_mnist(flags_obj):
         train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, hooks=train_hooks)
         eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn)
 
-        eval_results, export_results = tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
-
-        print('\nEvaluation results:\n\t%s\n' % eval_results)
-
-        if model_helpers.past_stop_threshold(flags_obj.stop_threshold,
-                                             eval_results['accuracy']):
-            break
+        tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
 
     # Export the model
     if flags_obj.export_dir is not None:
