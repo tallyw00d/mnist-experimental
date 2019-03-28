@@ -227,8 +227,12 @@ def run_mnist(flags_obj):
 
     # Train and evaluate model.
     for _ in range(flags_obj.train_epochs // flags_obj.epochs_between_evals):
-        mnist_classifier.train(input_fn=train_input_fn, hooks=train_hooks)
-        eval_results = mnist_classifier.evaluate(input_fn=eval_input_fn)
+
+        train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, hooks=train_hooks)
+        eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn)
+
+        eval_results, export_results = tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
+
         print('\nEvaluation results:\n\t%s\n' % eval_results)
 
         if model_helpers.past_stop_threshold(flags_obj.stop_threshold,
