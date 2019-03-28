@@ -225,13 +225,10 @@ def run_mnist(flags_obj):
         flags_obj.hooks, model_dir=flags_obj.model_dir,
         batch_size=flags_obj.batch_size)
 
-    # Train and evaluate model.
-    for _ in range(flags_obj.train_epochs // flags_obj.epochs_between_evals):
+    train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, hooks=train_hooks)
+    eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn)
 
-        train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, hooks=train_hooks)
-        eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn)
-
-        tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
+    tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
 
     # Export the model
     if flags_obj.export_dir is not None:
