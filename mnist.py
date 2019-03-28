@@ -110,10 +110,11 @@ def define_mnist_flags():
     flags_core.define_performance(num_parallel_calls=False)
     flags_core.define_image()
     data_dir = os.path.abspath(os.environ.get('PS_JOBSPACE', os.getcwd()) + '/data')
-    model_dir = os.path.abspath(os.environ.get('PS_MODEL_PATH', os.getcwd() + '/models'))
+    model_dir = os.path.abspath(os.environ.get('PS_MODEL_PATH', os.getcwd() + '/models') + '/mnist')
     flags.adopt_module_key_flags(flags_core)
     flags_core.set_defaults(data_dir=data_dir,
                             model_dir=model_dir,
+                            export_dir=os.environ.get('PS_MODEL_PATH', os.getcwd() + '/models'),
                             batch_size=int(os.environ.get('batch_size', 100)),
                             train_epochs=int(os.environ.get('train_epochs', 20)))
 
