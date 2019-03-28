@@ -110,12 +110,13 @@ def define_mnist_flags():
     flags_core.define_performance(num_parallel_calls=False)
     flags_core.define_image()
     data_dir = os.path.abspath(os.environ.get('PS_JOBSPACE', os.getcwd()) + '/data')
-    model_dir = os.path.abspath(os.environ.get('PS_JOBSPACE', os.getcwd()) + '/models')
+    model_dir = os.path.abspath(os.environ.get('PS_MODEL_PATH', os.getcwd() + '/models') + '/mnist')
     flags.adopt_module_key_flags(flags_core)
     flags_core.set_defaults(data_dir=data_dir,
                             model_dir=model_dir,
+                            export_dir=os.environ.get('PS_MODEL_PATH', os.getcwd() + '/models'),
                             batch_size=int(os.environ.get('batch_size', 100)),
-                            train_epochs=int(os.environ.get('train_epochs', 10)))
+                            train_epochs=int(os.environ.get('train_epochs', 20)))
 
 
 def model_fn(features, labels, mode, params):
@@ -225,15 +226,12 @@ def run_mnist(flags_obj):
         flags_obj.hooks, model_dir=flags_obj.model_dir,
         batch_size=flags_obj.batch_size)
 
-    # Train and evaluate model.
-    for _ in range(flags_obj.train_epochs // flags_obj.epochs_between_evals):
-        mnist_classifier.train(input_fn=train_input_fn, hooks=train_hooks)
-        eval_results = mnist_classifier.evaluate(input_fn=eval_input_fn)
-        print('\nEvaluation results:\n\t%s\n' % eval_results)
+    train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, hooks=train_hooks, max_steps=10000)
+    eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn, steps=None,
+                                      start_delay_secs=0,
+                                      throttle_secs=60)
 
-        if model_helpers.past_stop_threshold(flags_obj.stop_threshold,
-                                             eval_results['accuracy']):
-            break
+    tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
 
     # Export the model
     if flags_obj.export_dir is not None:
